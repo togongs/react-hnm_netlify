@@ -1,4 +1,5 @@
 import axios from "axios";
+import { productActions } from "../reducers/ProductReducer";
 
 // 미들웨어함수는 함수를 리턴한다
 
@@ -15,7 +16,8 @@ function getProducts(searchQuery) {
       const data = res.data;
       console.log(data);
       // setProductList(data);
-      dispatch({ type: "GET_PRODUCT_SUCCESS", payload: { data } });
+      // dispatch({ type: "GET_PRODUCT_SUCCESS", payload: { data } });
+      dispatch(productActions.getAllProducts({ data }));
     });
   };
 }
@@ -30,7 +32,8 @@ function getProductsDetail(id) {
     ).then((res) => {
       const data = res.data;
       console.log(data);
-      dispatch({ type: "GET_PRODUCT_DETAIL_SUCCESS", payload: { data } });
+      // dispatch({ type: "GET_SINGLE_PRODUCT_SUCCESS", payload: { data } });
+      dispatch(productActions.getSingleProduct({ data }));
     });
   };
 }
