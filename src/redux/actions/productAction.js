@@ -6,9 +6,9 @@ import { productActions } from "../reducers/ProductReducer";
 // 1. 데이터를 미들웨어에 먼저 보낸다
 // 2. 받은 데이터를 reducer로 보낸다
 function getProducts(searchQuery) {
-  return (dispatch, getState) => {
-    axios(
-      `https://my-json-server.typicode.com/togongs/hnm-web/products?q=${searchQuery}`,
+  return async (dispatch, getState) => {
+    await axios(
+      `https://my-json-server.typicode.com/togongs/react-prac/products?q=${searchQuery}`,
       {
         method: "get",
       }
@@ -23,9 +23,9 @@ function getProducts(searchQuery) {
 }
 
 function getProductsDetail(id) {
-  return (dispatch, getState) => {
-    axios(
-      `https://my-json-server.typicode.com/togongs/hnm-web/products/${id}`,
+  return async (dispatch, getState) => {
+    await axios(
+      `https://my-json-server.typicode.com/togongs/react-prac/products/${id}`,
       {
         method: "get",
       }

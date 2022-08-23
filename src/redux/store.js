@@ -11,6 +11,10 @@ import productReducer from "./reducers/ProductReducer";
 //   composeWithDevTools(applyMiddleware(thunk))
 // );
 
+// combine reducer o
+// thunk o
+// applymiddleware o
+// composeWithDevTools o
 const store = configureStore({
   reducer: {
     auth: authenticateReducer,
