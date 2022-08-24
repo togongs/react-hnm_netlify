@@ -8,7 +8,7 @@ import { productActions } from "../reducers/ProductReducer";
 function getProducts(searchQuery) {
   return async (dispatch, getState) => {
     await axios(
-      `https://my-json-server.typicode.com/togongs/react-prac/products?q=${searchQuery}`,
+      `https://my-json-server.typicode.com/togongs/basic-redux-toolkit/products?q=${searchQuery}`,
       {
         method: "get",
       }
@@ -25,7 +25,7 @@ function getProducts(searchQuery) {
 function getProductsDetail(id) {
   return async (dispatch, getState) => {
     await axios(
-      `https://my-json-server.typicode.com/togongs/react-prac/products/${id}`,
+      `https://my-json-server.typicode.com/togongs/basic-redux-toolkit/products/${id}`,
       {
         method: "get",
       }
