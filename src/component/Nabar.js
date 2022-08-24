@@ -30,6 +30,7 @@ const Nabar = () => {
   };
 
   const search = (event) => {
+    console.log("event", event);
     if (event.key === "Enter") {
       // 입력한 검색어를 읽어와서
       let keyword = event.target.value;
