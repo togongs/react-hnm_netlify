@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 let initialState = {
   productList: [],
   selectedItem: "",
+  isLast: false,
 };
 
 // 1. 매번 ifelse switch
@@ -33,8 +34,11 @@ const productSlice = createSlice({
     // ifelse, wsitch 써서 만든 케이스들
     // 함수로 만듦
     getAllProducts(state, action) {
+      // 액션함수들
       // return ...state x
-      state.productList = action.payload.data;
+      console.log("action.payload.isLast", action.payload);
+      state.productList = action.payload.list;
+      state.isLast = action.payload.isLast;
     },
     getSingleProduct(state, action) {
       state.selectedItem = action.payload.data;

@@ -32,10 +32,9 @@ const Nabar = () => {
   const search = (event) => {
     console.log("event", event);
     if (event.key === "Enter") {
-      // 입력한 검색어를 읽어와서
       let keyword = event.target.value;
       console.log("keyword", keyword);
-      // url을 바꿔준다
+      // 입력한 검색어를 읽어와서 url을 바꿔준다 -> keyword를 가져와서 api에서 검사
       navigate(`/?q=${keyword}`);
     }
   };

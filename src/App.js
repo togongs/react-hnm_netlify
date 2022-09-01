@@ -16,6 +16,7 @@ function App() {
   useEffect(() => {
     console.log("authenticate", authenticate);
   }, [authenticate]);
+
   return (
     <div>
       <Navbar />

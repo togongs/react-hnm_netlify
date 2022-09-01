@@ -7,19 +7,30 @@ import { useDispatch, useSelector } from "react-redux";
 import { productAction } from "../redux/actions/productAction"; // 객체로 반환한 것은 {객체명}으로
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
+import { DropdownButton, Button } from "react-bootstrap";
 
 const ProductAll = () => {
   // const [productList, setProductList] = useState([]);
-  const productList = useSelector((state) => state.product.productList);
-  const [query, setQuery] = useSearchParams();
+  const { productList, isLast } = useSelector((state) => state.product);
+  const [query, setQuery] = useSearchParams(); // url 쿼리값 읽어오기
   const [sorted, setSortedArr] = useState(false);
   const dispatch = useDispatch();
+  // const [isLast, setIsLast] = useState(false);
+  const [page, setPage] = useState(1);
+  let cnt = 4;
 
   const getProducts = () => {
     let searchQuery = query.get("q") || "";
     console.log("쿼리값은?", searchQuery);
-    dispatch(productAction.getProducts(searchQuery));
+    dispatch(productAction.getProducts(searchQuery, page, cnt));
+    // dispatch -> action미들웨어 -> reducer
+  };
+
+  const loadMore = () => {
+    console.log("haha");
+    const p = page + 1;
+    setPage(p);
+    dispatch(productAction.loadMore(p, cnt));
   };
 
   useEffect(() => {
@@ -50,10 +61,9 @@ const ProductAll = () => {
 
   return (
     <div>
-      {console.log("productList", productList)}
       <Container>
         <Row>
-          <Col>
+          <Col className="sort-btn">
             <DropdownButton
               as={ButtonGroup}
               key={"Secondary"}
@@ -96,7 +106,15 @@ const ProductAll = () => {
                   <ProductCard item={item} />
                 </Col>
               ))}
-          {console.log("sorted", sorted)}
+        </Row>
+        <Row>
+          <Col className="loadmore-btn">
+            {!isLast && (
+              <Button onClick={loadMore} variant="secondary">
+                Load More
+              </Button>
+            )}
+          </Col>
         </Row>
       </Container>
     </div>

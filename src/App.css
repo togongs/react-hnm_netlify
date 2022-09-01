@@ -23,3 +23,11 @@
   display: flex;
   justify-content: flex-end;
 }
+.sort-btn {
+  display: flex;
+  justify-content: flex-end;
+}
+.loadmore-btn {
+  display: flex;
+  justify-content: center;
+}
