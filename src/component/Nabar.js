@@ -29,6 +29,7 @@ const Nabar = () => {
     dispatch(authenticateAction.logout());
   };
 
+  // 서치바1
   const search = (event) => {
     console.log("event", event);
     if (event.key === "Enter") {

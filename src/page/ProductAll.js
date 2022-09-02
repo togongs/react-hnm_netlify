@@ -8,39 +8,50 @@ import { productAction } from "../redux/actions/productAction"; // 객체로 반
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Dropdown from "react-bootstrap/Dropdown";
 import { DropdownButton, Button } from "react-bootstrap";
+import { getAllProducts, LoadMore } from "../redux/reducers/ProductReducer";
 
 const ProductAll = () => {
   // const [productList, setProductList] = useState([]);
-  const { productList, isLast } = useSelector((state) => state.product);
+  const { productList, isLast, loading, error } = useSelector(
+    (state) => state.product
+  );
   const [query, setQuery] = useSearchParams(); // url 쿼리값 읽어오기
   const [sorted, setSortedArr] = useState(false);
   const dispatch = useDispatch();
-  // const [isLast, setIsLast] = useState(false);
-  const [page, setPage] = useState(1);
-  let cnt = 4;
 
-  const getProducts = () => {
+  const [page, setPage] = useState(1); // 더보기
+  let cnt = 4; // 첫페이지 아이템 리스트
+
+  // 서치바2
+  // const getProducts = () => {
+  //   let searchQuery = query.get("q") || "";
+  //   console.log("쿼리값은?", searchQuery);
+  //   dispatch(productAction.getProducts(searchQuery, page, cnt));
+  //   // dispatch -> action미들웨어 -> reducer
+  // };
+  useEffect(() => {
     let searchQuery = query.get("q") || "";
     console.log("쿼리값은?", searchQuery);
-    dispatch(productAction.getProducts(searchQuery, page, cnt));
-    // dispatch -> action미들웨어 -> reducer
-  };
+    dispatch(getAllProducts({ searchQuery, page, cnt }));
+  }, [query]);
 
+  // 더보기
   const loadMore = () => {
     console.log("haha");
     const p = page + 1;
     setPage(p);
-    dispatch(productAction.loadMore(p, cnt));
+    // dispatch(productAction.loadMore(p, cnt));
+    dispatch(LoadMore({ p, cnt }));
   };
 
-  useEffect(() => {
-    // api호출은 useEffect로
-    getProducts();
-  }, [query]);
+  // useEffect(() => {
+  //   // api호출 useEffect
+  //   getProducts();
+  // }, [query]);
 
+  // Sorted Item
   const selectItem = (eventKey) => {
     console.log("eventKey", typeof eventKey);
-
     if (eventKey == 1) {
       // 가나다순
       let list = [...productList];
@@ -58,6 +69,16 @@ const ProductAll = () => {
       setSortedArr(list);
     }
   };
+
+  // pending 상태일때
+  if (loading) {
+    return <div>로딩 중....</div>;
+  }
+
+  // error message
+  if (error) {
+    return <div>{error.message}</div>;
+  }
 
   return (
     <div>
@@ -95,12 +116,14 @@ const ProductAll = () => {
         </Row>
         <Row>
           {sorted
-            ? sorted.map((item) => (
+            ? // 분류된 item이 있다면
+              sorted.map((item) => (
                 <Col lg={3}>
                   <ProductCard item={item} />
                 </Col>
               ))
-            : productList &&
+            : // 분류된 item이 없다면
+              productList &&
               productList.map((item) => (
                 <Col lg={3}>
                   <ProductCard item={item} />
@@ -109,7 +132,9 @@ const ProductAll = () => {
         </Row>
         <Row>
           <Col className="loadmore-btn">
+            {console.log("isLast", isLast)}
             {!isLast && (
+              // item이 마지막이라면
               <Button onClick={loadMore} variant="secondary">
                 Load More
               </Button>

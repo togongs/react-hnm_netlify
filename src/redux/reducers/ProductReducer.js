@@ -1,9 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 let initialState = {
   productList: [],
   selectedItem: "",
+  loading: false,
   isLast: false,
+  error: null,
 };
 
 // 1. 매번 ifelse switch
@@ -27,21 +30,106 @@ let initialState = {
 
 // export default productReducer;
 
+export const getAllProducts = createAsyncThunk(
+  "product/getAllProducts",
+  // 썽크는 하나의 매개변수만 입력 가능
+  // 그러므로 dispatch를 할때 객체로 전달해야함
+  async (data, thunkAPI) => {
+    console.log("data", data);
+    const { searchQuery, page, cnt } = data;
+
+    try {
+      const res = await axios.get(
+        `https://my-json-server.typicode.com/togongs/react-hnm_netlify/products?q=${searchQuery}`
+      );
+      const data = res.data;
+      const list = data.slice(0, cnt * page); // 페이지 당 아이템 리스트
+      console.log("list", list);
+
+      return thunkAPI.fulfillWithValue(list);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const LoadMore = createAsyncThunk(
+  "product/LoadMore",
+  // 썽크는 하나의 매개변수만 입력 가능
+  // 그러므로 dispatch를 할때 객체로 전달해야함
+  async (data, thunkAPI) => {
+    console.log("data", data);
+    const { p, cnt } = data;
+
+    try {
+      const res = await axios.get(
+        `https://my-json-server.typicode.com/togongs/react-hnm_netlify/products`
+      );
+      const data = res.data;
+      const list = data.slice(0, cnt * p); // 페이지 당 아이템 리스트
+      console.log("list", list);
+
+      // 총 결과수 랑 표시할 결과가 같은 경우
+      if (data.length === 0 || list.length === data.length) {
+        // dispatch(productActions.getAllProducts({ list, isLast: true })); // reducer의 createSlice의 getAllProducts액션함수를 호출
+        return thunkAPI.fulfillWithValue({ list, isLast: true });
+      } else {
+        // dispatch(productActions.getAllProducts({ list, isLast: false })); // reducer의 createSlice의 getAllProducts액션함수를 호출
+        return thunkAPI.fulfillWithValue({ list, isLast: false });
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: "product", // unique한 액션네임을 만들어줌 (직접만들필요x)
   initialState,
   reducers: {
-    // ifelse, wsitch 써서 만든 케이스들
+    // ifelse, switch 써서 만든 케이스들
     // 함수로 만듦
-    getAllProducts(state, action) {
-      // 액션함수들
-      // return ...state x
-      console.log("action.payload.isLast", action.payload);
+    // getAllProducts(state, action) {
+    //   // 액션함수들
+    //   // return ...state x
+    //   state.productList = action.payload.list;
+    //   state.isLast = action.payload.isLast;
+    // },
+    // getSingleProduct(state, action) {
+    //   state.selectedItem = action.payload.data;
+    // },
+  },
+  // 썽크 미들웨어는 extraReducers
+  extraReducers: {
+    [getAllProducts.pending]: (state, action) => {
+      console.log("pending 상태", action); // Promise가 pending일때 dispatch
+      state.loading = true;
+    },
+    [getAllProducts.fulfilled]: (state, action) => {
+      console.log("fulfilled 상태", action); // Promise가 fullfilled일 때 dispatch
+      state.loading = false;
+      state.productList = action.payload;
+    },
+    [getAllProducts.rejected]: (state, action) => {
+      console.log("rejected 상태", action); // Promise가 rejected일 때 dispatch
+      state.loading = false;
+      state.error = action.payload; // catch 된 error 객체를 state.error에 넣습니다.
+    },
+
+    [LoadMore.pending]: (state, action) => {
+      state.loading = true;
+      console.log("pending 상태", action); // Promise가 pending일때 dispatch
+    },
+    [LoadMore.fulfilled]: (state, action) => {
+      console.log("fulfilled 상태", action); // Promise가 fullfilled일 때 dispatch
+      state.loading = false;
       state.productList = action.payload.list;
       state.isLast = action.payload.isLast;
     },
-    getSingleProduct(state, action) {
-      state.selectedItem = action.payload.data;
+    [LoadMore.rejected]: (state, action) => {
+      console.log("rejected 상태", action); // Promise가 rejected일 때 dispatch
+      state.loading = false;
+      state.error = action.payload; // catch 된 error 객체를 state.error에 넣습니다.
     },
   },
 });
