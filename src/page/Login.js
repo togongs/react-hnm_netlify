@@ -3,6 +3,7 @@ import { Form, Button, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { authenticateAction } from "../redux/actions/authenticateAction";
+import { login } from "../redux/reducers/authenticateReducer";
 
 const Login = ({ setAuthenticate }) => {
   const [id, setId] = useState("");
@@ -14,7 +15,7 @@ const Login = ({ setAuthenticate }) => {
     event.preventDefault(); // Form 태그 필수 / 페이지 리로딩 막아줌
     console.log("login user function issue");
     // setAuthenticate(true);
-    dispatch(authenticateAction.login(id, password));
+    dispatch(login({ id, password }));
 
     sessionStorage.setItem("id", id);
     sessionStorage.setItem("pw", password);

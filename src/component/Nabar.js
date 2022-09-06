@@ -5,6 +5,8 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { authenticateAction } from "../redux/actions/authenticateAction";
+import { login, logout } from "../redux/reducers/authenticateReducer";
+import { Form, Button, Container } from "react-bootstrap";
 
 const Nabar = () => {
   const { authenticate } = useSelector((state) => state.auth);
@@ -27,7 +29,7 @@ const Nabar = () => {
   const logOut = () => {
     // setAuthenticate(false);
     sessionStorage.clear();
-    dispatch(authenticateAction.logout());
+    dispatch(logout({ id: "", password: "", authenticate: false }));
   };
 
   // 서치바1
@@ -45,7 +47,7 @@ const Nabar = () => {
     const id = sessionStorage.getItem("id");
     const pw = sessionStorage.getItem("pw");
     if (id && pw) {
-      dispatch(authenticateAction.login({ authenticate: true }));
+      dispatch(login({ authenticate: true }));
     }
   }, [authenticate]);
 

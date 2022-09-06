@@ -10,14 +10,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 function App() {
-  // //true면 로그인 false면 로그인 안됨
+  //true면 로그인 false면 로그인 안됨
   // const [authenticate, setAuthenticate] = useState(false);
-  const authenticate = useSelector((state) => state.auth.authenticate);
+  const { authenticate } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   useEffect(() => {
     console.log("authenticate", authenticate);
-    if (authenticate && authenticate == false) {
+    if (authenticate && !authenticate) {
       navigate("/login");
     }
   }, [authenticate]);

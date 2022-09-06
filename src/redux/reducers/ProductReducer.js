@@ -45,7 +45,7 @@ export const getAllProducts = createAsyncThunk(
         `https://my-json-server.typicode.com/togongs/react-hnm_netlify/products?q=${searchQuery}`
       );
       const data = res.data;
-      const list = data.slice(0, cnt * page); // 페이지 당 아이템 리스트
+      const list = data.slice(0, cnt * page); // 페이지 당 아이템 리스트 갯수
       console.log("list", list);
 
       return thunkAPI.fulfillWithValue(list);

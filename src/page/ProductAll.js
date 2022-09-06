@@ -17,6 +17,7 @@ const ProductAll = () => {
   );
   const [query, setQuery] = useSearchParams(); // url 쿼리값 읽어오기
   const [sorted, setSortedArr] = useState(false);
+  const [title, setTitle] = useState("");
   const dispatch = useDispatch();
 
   const [page, setPage] = useState(1); // 더보기
@@ -52,7 +53,9 @@ const ProductAll = () => {
   // }, [query]);
 
   // Sorted Item
-  const selectItem = (eventKey) => {
+  const selectItem = (eventKey, event) => {
+    console.log(event.target.text);
+    setTitle(event.target.text);
     console.log("eventKey", typeof eventKey, eventKey);
     if (eventKey == 1) {
       // 가나다순
@@ -65,12 +68,9 @@ const ProductAll = () => {
       list.sort((a, b) => a.price - b.price);
       setSortedArr(list);
       // 높은 가격순
-    } else if (eventKey == 3) {
+    } else {
       let list = [...productList];
       list.sort((a, b) => b.price - a.price);
-      setSortedArr(list);
-    } else if (eventKey == 0) {
-      let list = [...productList];
       setSortedArr(list);
     }
   };
@@ -86,7 +86,6 @@ const ProductAll = () => {
   }
 
   const sortMenu = [
-    { title: "전체", key: 0 },
     { title: "가나다순", key: 1 },
     { title: "낮은 가격순", key: 2 },
     { title: "높은 가격순", key: 3 },
@@ -101,7 +100,7 @@ const ProductAll = () => {
               as={ButtonGroup}
               key={"Secondary"}
               variant={"Secondary".toLowerCase()}
-              title={"정렬"}
+              title={title ? title : "전체"}
               onSelect={selectItem}
             >
               {sortMenu.map((menu) => (
@@ -109,20 +108,6 @@ const ProductAll = () => {
               ))}
             </DropdownButton>
           </Col>
-          {/* <Col>
-            <DropdownButton
-              as={ButtonGroup}
-              key={"Secondary"}
-              variant={"Secondary".toLowerCase()}
-              title={"전체"}
-            >
-              <Dropdown.Item eventKey="1" active>
-                Action
-              </Dropdown.Item>
-              <Dropdown.Item eventKey="2">Another action</Dropdown.Item>
-              <Dropdown.Item eventKey="3">Active Item</Dropdown.Item>
-            </DropdownButton>
-          </Col> */}
         </Row>
         <Row>
           {sorted

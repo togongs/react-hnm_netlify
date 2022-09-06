@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 let initialState = {
   id: "",
@@ -33,21 +33,73 @@ let initialState = {
 
 // export default authenticateReducer;
 
+export const login = createAsyncThunk("auth/login", async (data, thunkAPI) => {
+  const { id, password } = data;
+  try {
+    console.log("data", data);
+    return thunkAPI.fulfillWithValue(data);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
+
+export const logout = createAsyncThunk(
+  "auth/logout",
+  async (data, thunkAPI) => {
+    const { id, password, authenticate } = data;
+    try {
+      console.log("data", data);
+      return thunkAPI.fulfillWithValue(data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    login(state, action) {
-      console.log("login action", action);
-      state.id = action.payload.id;
-      state.password = action.payload.password;
-      state.authenticate = true;
+    // login(state, action) {
+    //   console.log("login action", action);
+    //   state.id = action.payload.id;
+    //   state.password = action.payload.password;
+    //   state.authenticate = true;
+    // },
+    // logout(state, action) {
+    //   console.log("logout action", action);
+    //   state.id = action.payload.id;
+    //   state.password = action.payload.password;
+    //   state.authenticate = false;
+    // },
+  },
+  extraReducers: {
+    [login.pending]: (state, action) => {
+      console.log("pending 상태", action); // Promise가 pending일때 dispatch
     },
-    logout(state, action) {
-      console.log("logout action", action);
+    [login.fulfilled]: (state, action) => {
+      console.log("fulfilled 상태", action); // Promise가 fullfilled일 때 dispatch
       state.id = action.payload.id;
       state.password = action.payload.password;
-      state.authenticate = false;
+      state.authenticate = action.payload.authenticate;
+    },
+    [login.rejected]: (state, action) => {
+      console.log("rejected 상태", action); // Promise가 rejected일 때 dispatch
+      state.error = action.payload; // catch 된 error 객체를 state.error에 넣습니다.
+    },
+
+    [logout.pending]: (state, action) => {
+      console.log("pending 상태", action); // Promise가 pending일때 dispatch
+    },
+    [logout.fulfilled]: (state, action) => {
+      console.log("fulfilled 상태", action); // Promise가 fullfilled일 때 dispatch
+      state.id = action.payload.id;
+      state.password = action.payload.password;
+      state.authenticate = action.payload.authenticate;
+    },
+    [logout.rejected]: (state, action) => {
+      console.log("rejected 상태", action); // Promise가 rejected일 때 dispatch
+      state.error = action.payload; // catch 된 error 객체를 state.error에 넣습니다.
     },
   },
 });
