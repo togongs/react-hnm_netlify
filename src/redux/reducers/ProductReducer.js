@@ -27,15 +27,17 @@ let initialState = {
 //       return { ...state };
 //   }
 // }
-
 // export default productReducer;
 
+// action type 생성
+// thunk action creator 반환 (pending, fulfilled, rejected)
+// action creator? => promise 콜백을 실행, promise기반으로 lifecycle action을 dispatch
 export const getAllProducts = createAsyncThunk(
   "product/getAllProducts",
   // 썽크는 하나의 매개변수만 입력 가능
   // 그러므로 dispatch를 할때 객체로 전달해야함
   async (data, thunkAPI) => {
-    console.log("data", data);
+    console.log("All data", data);
     const { searchQuery, page, cnt } = data;
 
     try {
@@ -58,7 +60,7 @@ export const LoadMore = createAsyncThunk(
   // 썽크는 하나의 매개변수만 입력 가능
   // 그러므로 dispatch를 할때 객체로 전달해야함
   async (data, thunkAPI) => {
-    console.log("data", data);
+    console.log("LoadMore data", data);
     const { p, cnt } = data;
 
     try {
@@ -83,6 +85,26 @@ export const LoadMore = createAsyncThunk(
   }
 );
 
+export const getSingleProduct = createAsyncThunk(
+  "product/getSingleProduct",
+  async (data, thunkAPI) => {
+    console.log("Detail data??", data);
+    const { id } = data;
+
+    try {
+      const res = await axios.get(
+        `https://my-json-server.typicode.com/togongs/react-hnm_netlify/products/${id}`
+      );
+      const data = res.data;
+      console.log("data", data);
+      return thunkAPI.fulfillWithValue(data);
+    } catch (error) {
+      // 오류처리
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: "product", // unique한 액션네임을 만들어줌 (직접만들필요x)
   initialState,
@@ -100,6 +122,7 @@ const productSlice = createSlice({
     // },
   },
   // 썽크 미들웨어는 extraReducers
+  // 리듀서 생성
   extraReducers: {
     [getAllProducts.pending]: (state, action) => {
       console.log("pending 상태", action); // Promise가 pending일때 dispatch
@@ -127,6 +150,21 @@ const productSlice = createSlice({
       state.isLast = action.payload.isLast;
     },
     [LoadMore.rejected]: (state, action) => {
+      console.log("rejected 상태", action); // Promise가 rejected일 때 dispatch
+      state.loading = false;
+      state.error = action.payload; // catch 된 error 객체를 state.error에 넣습니다.
+    },
+
+    [getSingleProduct.pending]: (state, action) => {
+      console.log("pending 상태", action); // Promise가 pending일때 dispatch
+      state.loading = true;
+    },
+    [getSingleProduct.fulfilled]: (state, action) => {
+      console.log("fulfilled 상태", action); // Promise가 fullfilled일 때 dispatch
+      state.loading = false;
+      state.selectedItem = action.payload;
+    },
+    [getSingleProduct.rejected]: (state, action) => {
       console.log("rejected 상태", action); // Promise가 rejected일 때 dispatch
       state.loading = false;
       state.error = action.payload; // catch 된 error 객체를 state.error에 넣습니다.

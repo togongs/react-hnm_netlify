@@ -15,6 +15,9 @@ const Login = ({ setAuthenticate }) => {
     console.log("login user function issue");
     // setAuthenticate(true);
     dispatch(authenticateAction.login(id, password));
+
+    sessionStorage.setItem("id", id);
+    sessionStorage.setItem("pw", password);
     navigate("/");
   };
 

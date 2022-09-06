@@ -7,14 +7,19 @@ import Navbar from "./component/Nabar";
 import { useEffect, useState } from "react";
 import PrivateRoute from "./route/PrivateRoute";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function App() {
   // //true면 로그인 false면 로그인 안됨
   // const [authenticate, setAuthenticate] = useState(false);
   const authenticate = useSelector((state) => state.auth.authenticate);
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("authenticate", authenticate);
+    if (authenticate && authenticate == false) {
+      navigate("/login");
+    }
   }, [authenticate]);
 
   return (

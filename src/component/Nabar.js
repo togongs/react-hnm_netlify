@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux/es/exports";
 import { authenticateAction } from "../redux/actions/authenticateAction";
 
 const Nabar = () => {
-  const authenticate = useSelector((state) => state.auth.authenticate);
+  const { authenticate } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const menuList = [
@@ -26,6 +26,7 @@ const Nabar = () => {
   };
   const logOut = () => {
     // setAuthenticate(false);
+    sessionStorage.clear();
     dispatch(authenticateAction.logout());
   };
 
@@ -40,10 +41,18 @@ const Nabar = () => {
     }
   };
 
+  useEffect(() => {
+    const id = sessionStorage.getItem("id");
+    const pw = sessionStorage.getItem("pw");
+    if (id && pw) {
+      dispatch(authenticateAction.login({ authenticate: true }));
+    }
+  }, [authenticate]);
+
   return (
     <div>
       <div>
-        {authenticate === true ? (
+        {authenticate ? (
           <div className="login-button" onClick={logOut}>
             <FontAwesomeIcon icon={faUser} />
             <div>로그아웃</div>

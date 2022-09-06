@@ -29,6 +29,8 @@ const ProductAll = () => {
   //   dispatch(productAction.getProducts(searchQuery, page, cnt));
   //   // dispatch -> action미들웨어 -> reducer
   // };
+
+  // 서치바2
   useEffect(() => {
     let searchQuery = query.get("q") || "";
     console.log("쿼리값은?", searchQuery);
@@ -51,7 +53,7 @@ const ProductAll = () => {
 
   // Sorted Item
   const selectItem = (eventKey) => {
-    console.log("eventKey", typeof eventKey);
+    console.log("eventKey", typeof eventKey, eventKey);
     if (eventKey == 1) {
       // 가나다순
       let list = [...productList];
@@ -63,9 +65,12 @@ const ProductAll = () => {
       list.sort((a, b) => a.price - b.price);
       setSortedArr(list);
       // 높은 가격순
-    } else {
+    } else if (eventKey == 3) {
       let list = [...productList];
       list.sort((a, b) => b.price - a.price);
+      setSortedArr(list);
+    } else if (eventKey == 0) {
+      let list = [...productList];
       setSortedArr(list);
     }
   };
@@ -80,6 +85,13 @@ const ProductAll = () => {
     return <div>{error.message}</div>;
   }
 
+  const sortMenu = [
+    { title: "전체", key: 0 },
+    { title: "가나다순", key: 1 },
+    { title: "낮은 가격순", key: 2 },
+    { title: "높은 가격순", key: 3 },
+  ];
+
   return (
     <div>
       <Container>
@@ -89,14 +101,12 @@ const ProductAll = () => {
               as={ButtonGroup}
               key={"Secondary"}
               variant={"Secondary".toLowerCase()}
-              title={"전체"}
+              title={"정렬"}
               onSelect={selectItem}
             >
-              <Dropdown.Item eventKey="1" active>
-                가나다순
-              </Dropdown.Item>
-              <Dropdown.Item eventKey="2">낮은 가격순</Dropdown.Item>
-              <Dropdown.Item eventKey="3">높은 가격순</Dropdown.Item>
+              {sortMenu.map((menu) => (
+                <Dropdown.Item eventKey={menu.key}>{menu.title}</Dropdown.Item>
+              ))}
             </DropdownButton>
           </Col>
           {/* <Col>
