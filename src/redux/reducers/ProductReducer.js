@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import api from "../api";
 
 let initialState = {
   productList: [],
@@ -37,11 +38,11 @@ export const getAllProducts = createAsyncThunk(
   // 썽크는 하나의 매개변수만 입력 가능
   // 그러므로 dispatch를 할때 객체로 전달해야함
   async (data, thunkAPI) => {
-    console.log("All data", data);
+    // console.log("All data", data);
     const { searchQuery, page, cnt } = data;
 
     try {
-      const res = await axios.get(
+      const res = await api.get(
         `https://my-json-server.typicode.com/togongs/react-hnm_netlify/products?q=${searchQuery}`
       );
       const data = res.data;
@@ -64,11 +65,11 @@ export const LoadMore = createAsyncThunk(
     const { p, cnt } = data;
 
     try {
-      const res = await axios.get(
+      const res = await api.get(
         `https://my-json-server.typicode.com/togongs/react-hnm_netlify/products`
       );
       const data = res.data;
-      const list = data.slice(0, cnt * p); // 페이지 당 아이템 리스트
+      const list = data.slice(0, cnt * p - 4); // 4개씩 더 가져오기
       console.log("list", list);
 
       // 총 결과수 랑 표시할 결과가 같은 경우
@@ -92,7 +93,7 @@ export const getSingleProduct = createAsyncThunk(
     const { id } = data;
 
     try {
-      const res = await axios.get(
+      const res = await api.get(
         `https://my-json-server.typicode.com/togongs/react-hnm_netlify/products/${id}`
       );
       const data = res.data;

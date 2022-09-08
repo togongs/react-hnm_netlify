@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import ProductAll from "./page/ProductAll";
 import Login from "./page/Login";
-import ProductDetail from "./page/ProductDetail";
 import Navbar from "./component/Nabar";
 import { useEffect, useState } from "react";
 import PrivateRoute from "./route/PrivateRoute";
@@ -15,12 +14,22 @@ function App() {
   const { authenticate } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
+  let user_id = sessionStorage.getItem("id");
+
   useEffect(() => {
-    console.log("authenticate", authenticate);
-    if (authenticate && !authenticate) {
+    console.log("user_id", user_id);
+    if (user_id !== null) return;
+    if (user_id == null) {
       navigate("/login");
     }
-  }, [authenticate]);
+  }, [user_id]);
+
+  // useEffect(() => {
+  //   console.log("authenticate", authenticate);
+  //   if ( authenticate === false) {
+  //     navigate("/loginapp");
+  //   }
+  // }, [authenticate]);
 
   return (
     <div>

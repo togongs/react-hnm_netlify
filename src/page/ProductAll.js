@@ -21,7 +21,7 @@ const ProductAll = () => {
   const dispatch = useDispatch();
 
   const [page, setPage] = useState(1); // 더보기
-  let cnt = 4; // 첫페이지 아이템 리스트
+  let cnt = 8; // 첫페이지 아이템 리스트
 
   // 서치바2
   // const getProducts = () => {
@@ -37,6 +37,11 @@ const ProductAll = () => {
     console.log("쿼리값은?", searchQuery);
     dispatch(getAllProducts({ searchQuery, page, cnt }));
   }, [query]);
+
+  // let user_id = sessionStorage.getItem("id");
+  // useEffect(() => {
+  //   if (user_id !== null) return dispatch(getAllProducts());
+  // }, []);
 
   // 더보기
   const loadMore = () => {
@@ -77,7 +82,7 @@ const ProductAll = () => {
 
   // pending 상태일때
   if (loading) {
-    return <div>로딩 중....</div>;
+    return <h1>로딩 중....</h1>;
   }
 
   // error message
