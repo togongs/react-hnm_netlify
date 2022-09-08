@@ -5,10 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const PrivateRoute = () => {
   const authenticate = useSelector((state) => state.auth.authenticate);
-  return (
-    authenticate &&
-    (authenticate ? <ProductDetail /> : <Navigate to="/login" />)
-  );
+  return authenticate ? <ProductDetail /> : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;
