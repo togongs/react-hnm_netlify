@@ -1,8 +1,15 @@
+### json 서버
+
+- json-server --watch db.json --port 5000
+
 ### redux?
-  - redux toolkit 사용
+
+- redux toolkit 사용
 
 ### 비동기처리?
-  - 일반 function 미들웨어 함수 사용 -> createAsyncThunk으로 변경
+
+- 일반 function 미들웨어 함수 사용 -> createAsyncThunk으로 변경
 
 ### 배포서버
-  - https://legendary-beignet-c8c478.netlify.app/login
+
+- https://togongs-hnm.netlify.app/login

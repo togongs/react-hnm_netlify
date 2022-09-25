@@ -20,6 +20,10 @@ const store = configureStore({
     auth: authenticateReducer,
     product: productReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export default store;
