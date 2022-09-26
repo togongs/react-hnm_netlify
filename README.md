@@ -12,4 +12,4 @@
 
 ### 배포서버
 
-- https://togongs-hnm.netlify.app/login
+- https://togongs-hnm.netlify.app
